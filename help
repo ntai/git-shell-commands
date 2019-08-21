@@ -1,0 +1,81 @@
+#!/usr/local/bin/python3.6
+"""help - git-shell-commands's help command.
+"""
+import os
+import sys
+import importlib
+import importlib.util
+import importlib.machinery
+import stat
+import traceback
+import inspect
+
+importlib.machinery.SOURCE_SUFFIXES.append('') # empty string to allow any file
+
+from util import *
+
+# 
+git_cmds = os.path.split(sys.argv[0])[0]
+
+
+if __name__ == "__main__":
+    cmd_name = None
+    do_help = False
+
+    if len(sys.argv) >= 2:
+        cmd_name = sys.argv[1]
+        do_help = True
+        pass
+    else:
+        print("{}: Run 'help' for help, or 'exit' to leave.  Available commands:".format(git_cmds))
+        pass
+
+    if cmd_name:
+        cmd_list = [cmd_name]
+    else:
+        cmd_list = os.listdir(git_cmds)
+        pass
+
+    exec_bits = (stat.S_IXUSR|stat.S_IFREG)
+    for filename in cmd_list:
+        if filename == "help":
+            continue
+        if filename[-1] == "~":
+            continue
+    
+        cmd_path = os.path.join(git_cmds, filename)
+        try:
+            cmd_stat = os.stat(cmd_path)
+            if (cmd_stat.st_mode & exec_bits) != exec_bits:
+                continue
+            pass
+        except:
+            continue
+        spec = None
+        module = None
+        try:
+            spec = importlib.util.spec_from_file_location(filename, cmd_path)
+            module = importlib.util.module_from_spec(spec)
+        except:
+            print("Failed to import {}.\n{}".format(filename,traceback.format_exc()))
+            continue
+
+        if module:
+            print(filename)
+            if do_help:
+                text = inspect.getdoc(module)
+                if text:
+                    print(text)
+                    pass
+                else:
+                    subprocess.run([cmd_path, "-h"])
+                    pass
+                pass
+            pass
+        else:
+            print("not module " + filename)
+            pass
+        pass
+    pass
+
+        

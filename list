@@ -1,0 +1,38 @@
+#!/usr/local/bin/python3.6
+"""Usage: list [-v]
+
+Output: list of existing Git repository
+
+Options:
+  -v: Listting with repository description
+"""
+
+import os
+import sys
+from util import *
+
+if __name__ == "__main__":
+    # cmd_home = os.path.split(sys.argv[0])[0]
+    help = len(sys.argv) >= 2 and "-h" in sys.argv[1:]
+    if help:
+        print(__doc__)
+        sys.exit(0)
+        pass
+    home = os.environ['HOME']
+    verbose = len(sys.argv) >= 2 and "-v" in sys.argv[1:]
+    for dir in get_git_dirs():
+        if verbose:
+            try:
+                with open(os.path.join(dir, "description")) as desc:
+                    print("Repository: {}\n{}".format(dir[len(home)+1:], desc.read()))
+                    pass
+                pass
+            except Exception as exc:
+                # Hum. weird.
+                pass
+            pass
+        else:
+            print("Repository: {}".format(dir[len(home)+1:]))
+            pass
+        pass
+    pass

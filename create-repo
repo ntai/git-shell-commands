@@ -1,0 +1,62 @@
+#!/usr/local/bin/python3.6
+"""Usage: create-repo <repository-name>
+Creates a empty git repository. 
+
+Repository name can be any directory name. When the name does not end with ".git", it's automatically added. 
+"""
+
+import os
+import sys
+import subprocess
+import traceback
+from util import *
+
+home = os.environ['HOME']
+
+def create_repo(repo_name):
+    repo_ext = ""
+    if repo_name[-4:] != ".git":
+        repo_ext = ".git"
+        pass
+
+    repo_name = repo_name + repo_ext
+    new_path = os.path.join(home, repo_name)
+
+    if os.path.exists(new_path):
+        print("Repository {} exists.".format(repo_name))
+        return 1
+
+    try:
+        os.makedirs(new_path)
+        os.chdir(new_path)
+    except Exception as exc:
+        print("Create directory failed.\n" + traceback.format_exc())
+        return 1
+
+    try:
+        subprocess.run("git init --bare", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except Exception as exc:
+        print("git init --bare failed.\n" + traceback.format_exc())
+        return 1
+        pass
+
+    print("Created {}.".format(repo_name))
+    return 0
+    
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("create-repo <repo-name>")
+        sys.exit(1)
+        pass
+
+    help = len(sys.argv) >= 2 and "-h" in sys.argv[1:]
+    if help:
+        print(__doc__)
+        sys.exit(0)
+        pass
+
+    repo_name = sys.argv[1]
+    sys.exit(create_repo(repo_name))
+    pass
+
