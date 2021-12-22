@@ -1,5 +1,5 @@
 # git-shell-commands
-git-shell-commands written in Python (3.6)
+git-shell-commands written in Python (3.8)
 
 Currently there are only 3 commands.
 

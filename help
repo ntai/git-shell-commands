@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.6
+#!/usr/local/bin/python3.8
 """help - git-shell-commands's help command.
 """
 import os
