@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.6
+#!/usr/local/bin/python3.8
 """Usage: list [-v]
 
 Output: list of existing Git repository
@@ -18,7 +18,7 @@ if __name__ == "__main__":
         print(__doc__)
         sys.exit(0)
         pass
-    home = os.environ['HOME']
+    home = get_home_dir()
     verbose = len(sys.argv) >= 2 and "-v" in sys.argv[1:]
     for dir in get_git_dirs():
         if verbose:

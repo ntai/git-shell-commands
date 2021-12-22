@@ -3,11 +3,12 @@
 import os
 import subprocess
 
-home = os.environ['HOME']
+def get_home_dir():
+    return os.path.expanduser("~git")
 
 def get_git_dirs(dir=None):
     if dir is None:
-        dir = home
+        dir = get_home_dir()
         pass
     git_dirs = []
     for item in os.listdir(dir):
